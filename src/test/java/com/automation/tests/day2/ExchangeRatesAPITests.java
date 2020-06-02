@@ -41,11 +41,43 @@ public class ExchangeRatesAPITests {
         //#TASK: get currency exchange rate for dollar. By default it's euro.
 //        Response response = given().get(baseURI+"latest?base=USD");
         Response response = given().
-                baseUri(baseURI + "latest").
-                queryParam("base", "USD").
-                get();
+                            baseUri(baseURI + "latest").
+                            queryParam("base", "USD").
+                            get();
         assertEquals(200, response.getStatusCode());
         System.out.println(response.prettyPrint());
     }
+
+    //    #TASK: verify that response body, for latest currency rates, contains today's date (2020-01-23 | yyyy-MM-dd)
+    @Test
+    public void test4() {
+        Response response = given().
+                baseUri(baseURI + "latest").
+                queryParam("base", "GBP").
+                get();
+
+        String todaysDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        System.out.println("Today's date: " + todaysDate);
+
+        assertEquals(200, response.getStatusCode());
+        assertTrue(response.getBody().asString().contains(todaysDate));
+    }
+
+    //let's get currency exchange rate for year 2000
+    //GET https://api.exchangeratesapi.io/history?start_at=2018-01-01&end_at=2018-09-01&base=USD&symbols=ILS,JPY
+
+    @Test
+    public void test5() {
+        Response response = given().
+                            baseUri(baseURI + "history").
+                            queryParam("start_at", "2000-01-01").
+                            queryParam("end_at", "2000-12-31").
+                            queryParam("base", "USD").
+                            queryParam("symbols", "EUR", "GBP", "JPY").
+                            get();
+        System.out.println(response.prettyPrint());
+    }
+
 
 }
