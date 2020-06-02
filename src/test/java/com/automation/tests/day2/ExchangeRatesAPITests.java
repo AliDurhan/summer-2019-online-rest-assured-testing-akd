@@ -79,5 +79,23 @@ public class ExchangeRatesAPITests {
         System.out.println(response.prettyPrint());
     }
 
+    /**
+     * Given request parameter "base" is "USD"
+     * When user sends request to "api.openrates.io"
+     * Then response code should be 200
+     * And response body must contain ""base": "USD""
+     */
+
+    @Test
+    public void test6() {
+        Response response = given().
+                            baseUri(baseURI + "latest").
+                            queryParam("base", "USD").
+                            get();
+        String body = response.getBody().asString();
+        assertEquals(200, response.getStatusCode());
+        assertTrue(body.contains("\"base\":\"USD\""));
+    }
+
 
 }
